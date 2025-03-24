@@ -1,75 +1,411 @@
-import React from "react";
-import { FaLinkedin, FaGithub, FaEnvelope } from "react-icons/fa";
+"use client" // Add this line at the top of your page.tsx
 
-const projects = [
-  {
-    name: "SAIBOOKS – Online Bookstore Web App",
-    tech: "Java, JDBC, Servlets, JSP, Oracle DB, HTML, CSS, JavaScript",
-    link: "https://github.com/sairam468/SAIBOOK_APP__Project",
-  },
-  {
-    name: "Spring Boot Mini Projects",
-    tech: "Java, Spring Boot (REST, Security, Data JPA), MySQL",
-    link: "https://github.com/sairam468/Spring-Boot-Mini-Projects.git",
-  },
-  {
-    name: "Full Stack Web App (CRUD Operations)",
-    tech: "Java, Spring Boot, ReactJS, MySQL",
-    link: "https://github.com/sairam468/Java-Java-Spring-Core.git",
-  },
-];
+import React, { useState, useEffect } from 'react';
+import {  Database,  Mail, Phone, User, Cpu, Terminal,  } from "lucide-react";
+import { FaLinkedin, FaGithub } from "react-icons/fa";
+import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+import { SiSpringboot, SiMysql, SiOracle, SiHtml5, SiCss3, SiJavascript, SiGit, SiGradle, SiPostman } from "react-icons/si";
+import { File } from 'lucide-react';
+import { MdCode } from 'react-icons/md';
+import { GiDatabase } from 'react-icons/gi';
+import { FaServer } from 'react-icons/fa';
+import { BsFileEarmarkCode } from 'react-icons/bs';
+//import { SiJava } from 'react-icons/si'; // Removed SiJava
+import { DiJava } from 'react-icons/di'; // Added DiJava
 
-export default function Portfolio() {
-  return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
-      <header className="text-center py-8">
-        <h1 className="text-4xl font-bold">Ganta Lakshman Naga Durga Sairam</h1>
-        <p className="text-lg mt-2">Java Full Stack Developer</p>
-      </header>
 
-      <section className="my-12">
-        <h2 className="text-3xl font-semibold mb-4">About Me</h2>
-        <p className="text-lg text-gray-300">
-          Enthusiastic and detail-oriented Java Full Stack Developer with
-          expertise in backend development, REST API design, and cloud
-          technologies. Passionate about building scalable applications.
-        </p>
-      </section>
+// Animation variants
+const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeInOut' } },
+    exit: { opacity: 0, y: -50, transition: { duration: 0.4 } },
+    hover: { scale: 1.03, boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" },
+    tap: { scale: 0.97 }
+};
 
-      <section className="my-12">
-        <h2 className="text-3xl font-semibold mb-4">Projects</h2>
-        <div className="grid md:grid-cols-2 gap-6">
-          {projects.map((project, index) => (
-            <div key={index} className="bg-gray-800 p-4 rounded-lg">
-              <h3 className="text-xl font-semibold">{project.name}</h3>
-              <p className="text-gray-400 text-sm">{project.tech}</p>
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-400 hover:underline mt-2 inline-block"
-              >
-                View on GitHub
-              </a>
-            </div>
-          ))}
+const skillVariants = {
+    hidden: { opacity: 0, scale: 0.5 },
+    visible: (i: number) => ({
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        x: 0,
+        transition: {
+            duration: 0.6,
+            delay: i * 0.1,
+            ease: "easeInOut"
+        }
+    }),
+    whileHover: { scale: 1.1, y: -10, boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)" },
+    whileTap: { scale: 0.95 },
+};
+
+const projectVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: (i: number) => ({
+        opacity: 1,
+        x: 0,
+        transition: {
+            duration: 0.5,
+            delay: i * 0.2,
+            ease: 'easeOut'
+        }
+    }),
+    hover: { scale: 1.03, boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" },
+    tap: { scale: 0.97 }
+};
+
+const Portfolio = () => {
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+    useEffect(() => {
+        const storedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+            setIsDarkMode(true);
+            document.documentElement.classList.add('dark');
+        } else {
+            setIsDarkMode(false);
+            document.documentElement.classList.remove('dark');
+        }
+    }, []);
+
+    const toggleDarkMode = () => {
+        setIsDarkMode(prev => {
+            const newTheme = !prev ? 'dark' : 'light';
+            localStorage.setItem('theme', newTheme);
+            if (newTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            return !prev;
+        });
+    };
+
+    // Skills data with categories
+    const categorizedSkills = [
+        {
+            category: 'Programming Languages',
+            items: [
+                { skill: 'Java', icon: <DiJava className="text-3xl text-orange-600" /> }, // Use DiJava here
+            ]
+        },
+        {
+            category: 'Java Technologies',
+            items: [
+                { skill: 'JDBC', icon: <GiDatabase className="text-3xl text-blue-600" /> },
+                { skill: 'Servlets', icon: <FaServer className="text-3xl text-red-500" /> },
+                { skill: 'JSP', icon: <BsFileEarmarkCode className="text-3xl text-yellow-400" /> },
+                { skill: 'EL-JSTL', icon: <Cpu className="text-3xl text-purple-500" /> },
+            ]
+        },
+        {
+            category: 'Frameworks',
+            items: [
+                { skill: 'Spring Boot', icon: <SiSpringboot className="text-3xl text-green-600" /> },
+                { skill: 'Spring Boot Data JPA', icon: <SiSpringboot className="text-3xl text-green-600" /> },
+                { skill: 'Spring Boot REST', icon: <SiSpringboot className="text-3xl text-green-600" /> },
+                { skill: 'Spring Boot Security', icon: <SiSpringboot className="text-3xl text-green-600" /> },
+                { skill: 'Spring Boot Microservices', icon: <SiSpringboot className="text-3xl text-green-600" /> },
+            ]
+        },
+        {
+            category: 'Web Development',
+            items: [
+                { skill: 'HTML', icon: <SiHtml5 className="text-3xl text-orange-500" /> },
+                { skill: 'CSS', icon: <SiCss3 className="text-3xl text-blue-500" /> },
+                { skill: 'JavaScript', icon: <SiJavascript className="text-3xl text-yellow-500" /> },
+            ]
+        },
+        {
+            category: 'Database',
+            items: [
+                { skill: 'MySQL', icon: <SiMysql className="text-3xl text-blue-700" /> },
+                { skill: 'Oracle', icon: <SiOracle className="text-3xl text-red-600" /> },
+            ]
+        },
+        {
+            category: 'Tools',
+            items: [
+                { skill: 'Maven', icon:  <MdCode className="text-3xl text-orange-500" /> },
+                { skill: 'Gradle', icon: <SiGradle className="text-3xl text-green-500" /> },
+                { skill: 'Git', icon: <SiGit className="text-3xl text-red-500" /> },
+                { skill: 'Postman', icon: <SiPostman className="text-3xl text-orange-600" /> },
+            ]
+        }
+    ];
+
+      const aboutMeData = [
+        {
+            text: "I am a passionate software developer with a strong background in Java and Spring Boot. I enjoy building robust and scalable applications. My experience includes working with various databases like MySQL and Oracle, and utilizing technologies like HTML, CSS, and JavaScript for front-end development. I am proficient in using tools like Git, Maven, and Gradle for version control and build automation.",
+        },
+        {
+            text: "I am always eager to learn new technologies and improve my skills. My goal is to contribute to innovative projects and create impactful solutions.",
+        },
+    ];
+
+    const contactMeData = [
+        {
+            name: 'Ganta Lakshman Naga Durga Sairam',
+            email: 'sairamganta1@gmail.com',
+            phone: '7032054842',
+            github: 'https://github.com/sairam468',
+            linkedin: 'https://www.linkedin.com/in/lakshman-naga-durga-sairam-ganta-549195266',
+        },
+    ];
+
+    return (
+        <div className={cn(
+            "min-h-screen p-4 md:p-6 transition-colors duration-500  bg-sky-100 dark:bg-gray-800",
+            isDarkMode ? "text-white" : "text-gray-900"
+        )}>
+            {/* Navbar */}
+            <nav className={cn(
+                "flex justify-between items-center p-4 shadow-lg rounded-lg sticky top-0 left-0 w-full z-50",
+                "bg-gradient-to-r from-blue-500 to-sky-500 text-white"
+            )}>
+                <h1 className="text-2xl font-bold">Sairam's Portfolio</h1>
+                <div className="flex space-x-4">
+                    <a href="#about" className="hover:text-gray-200 transition duration-300">About</a>
+                    <a href="#skills" className="hover:text-gray-200 transition duration-300">Skills</a>
+                    <a href="#projects" className="hover:text-gray-200 transition duration-300">Projects</a>
+                    <a href="#contact" className="hover:text-gray-200 transition duration-300">Contact</a>
+                    <a
+                        href="https://drive.google.com/file/d/1ySqwHtu1l4PlXAyhbs_SUG7ioEU-u3dg/view?usp=sharing"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="hover:text-gray-200 transition duration-300"
+                    >
+                        Resume
+                    </a>
+                    <Button
+                        variant="outline"
+                        onClick={toggleDarkMode}
+                        className="bg-white/20 hover:bg-white/30 text-white border-white/50"
+                    >
+                        {isDarkMode ? 'Light' : 'Dark'}
+                    </Button>
+                </div>
+            </nav>
+
+            {/* About Section */}
+           <section id="about" className="mt-16 pt-10">
+                <h3 className="text-3xl font-bold text-center mb-6">About Me</h3>
+                <div className="flex flex-col items-center w-full">
+                    {aboutMeData.map((item, index) => (
+                        <motion.div
+                            key={index}
+                            variants={cardVariants}
+                            initial="hidden"
+                            animate="visible"
+                            whileHover="hover"
+                            whileTap="tap"
+                            transition={{ duration: 0.6, ease: 'easeInOut' }}
+                            className={cn(
+                                "mt-6 text-center w-full max-w-4xl rounded-lg shadow-md p-6",
+                                "bg-gradient-to-r from-white to-sky-100 dark:from-gray-800 dark:to-gray-700",
+                                isDarkMode ? "text-white" : "text-gray-800 dark:text-gray-200",
+                                "hover:shadow-lg transition-all duration-300 border border-transparent hover:border-blue-500/40"
+                            )}
+                        >
+                            <p className="text-lg">{item.text}</p>
+                        </motion.div>
+                    ))}
+                </div>
+            </section>
+
+            {/* Skills Section */}
+            <section id="skills" className="mt-16 pt-10">
+                <h3 className="text-3xl font-bold text-center mb-6">Technical Skills</h3>
+                <div className="flex flex-col items-center">
+                    {categorizedSkills.map((categoryData, catIndex) => (
+                        <div key={catIndex} className="mb-12 w-full max-w-4xl">
+                            <h4 className="text-2xl font-semibold mb-4 text-left text-blue-700 dark:text-blue-400">{categoryData.category}</h4>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                                {categoryData.items.map((item, skillIndex) => (
+                                    <motion.div
+                                        key={skillIndex}
+                                        variants={skillVariants}
+                                        initial="hidden"
+                                        animate="visible"
+                                        custom={skillIndex}
+                                        whileHover="whileHover"
+                                        whileTap="tap"
+                                        className={cn(
+                                            "p-6 rounded-lg shadow-md flex items-center justify-center space-x-4",
+                                            "bg-white hover:bg-sky-50 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-white",
+                                            "hover:shadow-lg transition-all duration-300 border border-transparent hover:border-blue-500/40"
+                                        )}
+                                    >
+                                        {item.icon}
+                                        <span className="text-lg">{item.skill}</span>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* Projects Section */}
+            <section id="projects" className="mt-16 pt-10">
+                <h3 className="text-3xl font-bold text-center mb-6">Projects</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                    <AnimatePresence>
+                        {[
+                            {
+                                title: 'SAIBOOKS - Online Bookstore',
+                                techStack: 'Java, JSP, Servlets, Oracle DB',
+                                githubLink: 'https://github.com/sairam468/Spring-Boot-Mini-Projects.git',
+                                description: 'An online bookstore application with user authentication, browsing, and shopping cart features.'
+                            },
+                            {
+                                title: 'Reports Generation App',
+                                techStack: 'Spring Boot, REST API, Hibernate',
+                                githubLink: 'https://github.com/sairam468/Spring-Boot-Mini-Projects/tree/74b0965c77b58961cc71fdb878f03687257b01fe/01_Reports_App',
+                                description: 'A Spring Boot application for generating various reports using REST APIs and Hibernate.'
+                            },
+                            {
+                                title: 'Student Enquiry Management App',
+                                techStack: 'Spring Boot, REST API, MySQL',
+                                githubLink: 'https://github.com/sairam468/Spring-Boot-Mini-Projects/tree/74b0965c77b58961cc71fdb878f03687257b01fe/02_StudentEnquiryMgmt',
+                                description: 'A web application for managing student inquiries using Spring Boot, REST APIs, and MySQL.'
+                            },
+                            {
+                                title: 'Blog App',
+                                techStack: 'Spring Boot, REST API, Hibernate',
+                                githubLink: 'https://github.com/sairam468/Spring-Boot-Mini-Projects/tree/74b0965c77b58961cc71fdb878f03687257b01fe/03_Blog_App',
+                                description: 'A RESTful blog application built with Spring Boot and Hibernate.'
+                            }
+                        ].map((project, index) => (
+                            <motion.div
+                                key={project.title}
+                                variants={projectVariants}
+                                initial="hidden"
+                                animate="visible"
+                                custom={index}
+                                whileHover="hover"
+                                whileTap="tap"
+                            >
+                                <Card className={cn(
+                                    "shadow-md hover:shadow-lg transition-all duration-300 border border-transparent hover:border-blue-500/40",
+                                    "bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
+                                )}>
+                                    <CardHeader>
+                                        <CardTitle className="text-xl font-semibold flex items-center text-blue-700 dark:text-blue-400">
+                                            <File className="mr-2 text-blue-500" /> {project.title}
+                                        </CardTitle>
+                                        <CardDescription className={isDarkMode ? "text-gray-300" : "text-gray-600"}>{project.techStack}</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <p className="text-gray-700 dark:text-gray-300 mb-4">{project.description}</p>
+                                        <a
+                                            href={project.githubLink}
+                                            className="text-blue-600 hover:underline inline-flex items-center dark:text-blue-400"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            View on GitHub
+                                        </a>
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </div>
+            </section>
+
+             {/* Contact Me Section */}
+             <section id="contact" className="mt-16 pt-10">
+                <h3 className="text-3xl font-bold text-center mb-6">Contact Me</h3>
+                <div className="flex flex-col items-center">
+                    {contactMeData.map((contactData, index) => (
+                        <motion.div
+                            key={index}
+                            variants={cardVariants}
+                            initial="hidden"
+                            animate="visible"
+                            className="w-full max-w-4xl"
+                        >
+                            <Card className={cn(
+                                "shadow-md",
+                                "bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
+                            )}>
+                                <CardHeader>
+                                    <CardTitle className="text-xl font-semibold flex items-center text-blue-700 dark:text-blue-400">
+                                        <User className="mr-2 text-gray-600 dark:text-gray-400" />
+                                        {contactData.name}
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
+                                        {[
+                                            {
+                                                type: 'Email',
+                                                value: contactData.email,
+                                                icon: <Mail className="text-2xl text-gray-600 dark:text-gray-400" />,
+                                                link: `mailto:${contactData.email}`
+                                            },
+                                            {
+                                                type: 'Phone',
+                                                value: contactData.phone,
+                                                icon: <Phone className="text-2xl text-gray-600 dark:text-gray-400" />,
+                                                link: null
+                                            },
+                                            {
+                                                type: 'GitHub',
+                                                value: 'GitHub Profile',
+                                                icon: <FaGithub className="text-2xl text-gray-600 dark:text-gray-400" />,
+                                                link: contactData.github
+                                            },
+                                            {
+                                                type: 'LinkedIn',
+                                                value: 'LinkedIn Profile',
+                                                icon: <FaLinkedin className="text-2xl text-gray-600 dark:text-gray-400" />,
+                                                link: contactData.linkedin
+                                            }
+                                        ].map((item, contactIndex) => (
+                                            <motion.div
+                                                key={contactIndex}
+                                                variants={skillVariants}
+                                                initial="hidden"
+                                                animate="visible"
+                                                custom={contactIndex}
+                                                whileHover="whileHover"
+                                                whileTap="tap"
+                                                className={cn(
+                                                    "p-6 rounded-lg shadow-md flex items-center justify-center space-x-4",
+                                                    "bg-white hover:bg-sky-50 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-800 dark:text-white",
+                                                    "hover:shadow-lg transition-all duration-300 border border-transparent hover:border-blue-500/40"
+                                                )}
+                                            >
+                                                {item.icon}
+                                                <span className="text-lg">
+                                                    {item.link ? (
+                                                        <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">
+                                                            {item.value}
+                                                        </a>
+                                                    ) : (
+                                                        item.value
+                                                    )}
+                                                </span>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    ))}
+                </div>
+            </section>
         </div>
-      </section>
+    );
+};
 
-      <section className="my-12">
-        <h2 className="text-3xl font-semibold mb-4">Contact</h2>
-        <div className="flex space-x-6 text-2xl">
-          <a href="https://www.linkedin.com/in/lakshman-naga-durga-sairam-ganta-549195266" target="_blank" rel="noopener noreferrer">
-            <FaLinkedin className="hover:text-blue-400" />
-          </a>
-          <a href="https://github.com/sairam468" target="_blank" rel="noopener noreferrer">
-            <FaGithub className="hover:text-gray-400" />
-          </a>
-          <a href="mailto:sairamganta1@gmail.com">
-            <FaEnvelope className="hover:text-red-400" />
-          </a>
-        </div>
-      </section>
-    </div>
-  );
-}
+export default Portfolio;
+
