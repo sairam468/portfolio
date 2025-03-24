@@ -1,0 +1,75 @@
+import React from "react";
+import { FaLinkedin, FaGithub, FaEnvelope } from "react-icons/fa";
+
+const projects = [
+  {
+    name: "SAIBOOKS – Online Bookstore Web App",
+    tech: "Java, JDBC, Servlets, JSP, Oracle DB, HTML, CSS, JavaScript",
+    link: "https://github.com/sairam468/SAIBOOK_APP__Project",
+  },
+  {
+    name: "Spring Boot Mini Projects",
+    tech: "Java, Spring Boot (REST, Security, Data JPA), MySQL",
+    link: "https://github.com/sairam468/Spring-Boot-Mini-Projects.git",
+  },
+  {
+    name: "Full Stack Web App (CRUD Operations)",
+    tech: "Java, Spring Boot, ReactJS, MySQL",
+    link: "https://github.com/sairam468/Java-Java-Spring-Core.git",
+  },
+];
+
+export default function Portfolio() {
+  return (
+    <div className="min-h-screen bg-gray-900 text-white p-6">
+      <header className="text-center py-8">
+        <h1 className="text-4xl font-bold">Ganta Lakshman Naga Durga Sairam</h1>
+        <p className="text-lg mt-2">Java Full Stack Developer</p>
+      </header>
+
+      <section className="my-12">
+        <h2 className="text-3xl font-semibold mb-4">About Me</h2>
+        <p className="text-lg text-gray-300">
+          Enthusiastic and detail-oriented Java Full Stack Developer with
+          expertise in backend development, REST API design, and cloud
+          technologies. Passionate about building scalable applications.
+        </p>
+      </section>
+
+      <section className="my-12">
+        <h2 className="text-3xl font-semibold mb-4">Projects</h2>
+        <div className="grid md:grid-cols-2 gap-6">
+          {projects.map((project, index) => (
+            <div key={index} className="bg-gray-800 p-4 rounded-lg">
+              <h3 className="text-xl font-semibold">{project.name}</h3>
+              <p className="text-gray-400 text-sm">{project.tech}</p>
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:underline mt-2 inline-block"
+              >
+                View on GitHub
+              </a>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="my-12">
+        <h2 className="text-3xl font-semibold mb-4">Contact</h2>
+        <div className="flex space-x-6 text-2xl">
+          <a href="https://www.linkedin.com/in/lakshman-naga-durga-sairam-ganta-549195266" target="_blank" rel="noopener noreferrer">
+            <FaLinkedin className="hover:text-blue-400" />
+          </a>
+          <a href="https://github.com/sairam468" target="_blank" rel="noopener noreferrer">
+            <FaGithub className="hover:text-gray-400" />
+          </a>
+          <a href="mailto:sairamganta1@gmail.com">
+            <FaEnvelope className="hover:text-red-400" />
+          </a>
+        </div>
+      </section>
+    </div>
+  );
+}
